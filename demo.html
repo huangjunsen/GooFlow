@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>GooFlow</title>
+        <link rel="stylesheet" href="dist/GooFlow.min.css">
+        <link rel="stylesheet" href="fontawesome/css/font-awesome.min.css">
+
+        <style>
+        /*此处仅为该demo的显示样式，与 GooFlow 无关紧要********start********/
+        body{color:rgb(19,155,173);font-family:"Microsoft YaHei","Lato","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;}
+        .contaner{padding:20px;}
+        .text-center{text-align:center;}
+        small{font-size:75%;color:gray;}
+        .row{width:100%;}
+        [class^="col"] {padding:0 0.5% 1% 0.5%;float:left;}
+        .col3{width:24%;}
+        .col4{width:32%;}
+        .col6{width:49%;}
+        .col12{width:99%;}
+        .clr{clear:both;}
+        pre {display:block;padding:9.5px;margin:0 0 10px;font-size:13px;line-height:1.42857143;color:#333;word-break:break-all;word-wrap:break-word;background-color:#e3e3e3;border:1px solid #ccc;border-radius:4px;font-family: Menlo,Monaco,Consolas,"Courier New",monospace;}
+        code{padding:2px 4px;font-size:90%;color:#c7254e;border-radius:4px;text-shadow:0 0 10px rgba(0,0,0,0.3);}
+        ul{list-style:none;}
+        .table-responsive{overflow-x: auto;}
+        .btn{border-radius:3px;-webkit-box-shadow:none;box-shadow:none;border:1px solid transparent;background-color:#3c8dbc;border-color:#367fa9;color:#fff;padding:6px 12px;cursor:pointer;}
+        .text-red{color:#F00 !important;}
+        /*此处仅为该demo的显示样式，与 GooFlow 无关紧要********end********/
+        </style>
+        <!-- simpletable 插件并非本插件必须 -->
+        <link rel="stylesheet" href="simpletable/simpletable.min.css">
+    </head>
+    <body>
+        <div class="contaner">
+            <h1 class='text-center'>GooFlow <small>V1.0</small></h1>
+            <h2 class='text-center'><small>一个基于 Jquery/FontAwesome 的流程图/架构图画图插件</small></h2>
+            <h2 class='text-center'><small>Sam 2016.Apr</small></h2>
+            <h3>1. 示例</h3>
+            <div id="demo1"></div>
+            <button type="button" class="btn" id="demo1Export">显示数据到 Console</button>
+            <br />
+            <h3>2. 使用方法：</h3>
+            <ul>
+                <li>2.1. 添加CSS及JS文件<br />
+                <pre><code>&lt;link rel="stylesheet" href="dist/GooFlow.min.css"&gt;<br />&lt;link rel="stylesheet" href="fontawesome/css/font-awesome.min.css"&gt;<br />&lt;script src="dist/jquery.min.js"&gt;&lt;/script&gt;<br />&lt;script src="dist/GooFlow.min.js"&gt;&lt;/script&gt;</code></pre></li>
+                <li>2.2. 书写容器 Dom<br />
+                <pre><code>&lt;div id="demo1"&gt;&lt;/div&gt;</code></pre></li>
+                <li>2.3. 激活/生成：<br />
+                <pre><code>var demo1 = $('#demo1').createGooFlow(<span class="text-red">options</span>);</code></pre></li>
+            </ul>
+            <h3>3. 参数(options)：</h3>
+            <div class="table-responsive">
+                <table class="simpletable tab-primary">
+                    <thead>
+                        <tr><th>参数</th><th>默认值</th><th>描述</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>''</td>
+                            <td>作为流程图在页面中的唯一标识，必选，或者提供含有id属性的dom（如示例）</td>
+                        </tr>
+                        <tr>
+                            <td>MainContener</td>
+                            <td>$('body')[0]</td>
+                            <td>
+                                如果工作区并非包含在position:absulote的情况下，保持默认即可<br>
+                                但是如果外围存在这种绝对定位的容器，则此处应该添加该绝对定位容器的dom
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>width</td>
+                            <td>'auto'</td>
+                            <td>定义整个控件的宽（含工具栏、滚动条），默认与父容器同宽</td>
+                        </tr>
+                        <tr>
+                            <td>height</td>
+                            <td>500</td>
+                            <td>定义整个控件的高（含顶部工具栏、滚动条）</td>
+                        </tr>
+                        <tr>
+                            <td>initNum</td>
+                            <td>1</td>
+                            <td>元素起始编码</td>
+                        </tr>
+                        <tr>
+                            <td>initLabelText</td>
+                            <td>'newFlow_1'</td>
+                            <td>左上角流程图显示的标题</td>
+                        </tr>
+                        <tr>
+                            <td>workWidth</td>
+                            <td>null</td>
+                            <td>定义画布的宽, 如忽略, 则根据 width 自动计算。</td>
+                        </tr>
+                        <tr>
+                            <td>workHeight</td>
+                            <td>null</td>
+                            <td>定义画布的宽, 如忽略, 则根据 height 自动计算</td>
+                        </tr>
+                        <tr>
+                            <td>haveHead</td>
+                            <td>true</td>
+                            <td>是否显示头部工具栏</td>
+                        </tr>
+                        <tr>
+                            <td>headBtns</td>
+                            <td><pre><code>[<br />&nbsp;&nbsp;"save",<br />&nbsp;&nbsp;"undo",<br />&nbsp;&nbsp;"redo",<br />&nbsp;&nbsp;"reload",<br />&nbsp;&nbsp;"expand",<br />&nbsp;&nbsp;"new"<br />]</code></pre></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>headBtnRemarks</td>
+                            <td>['保存','撤销','重做','重置画布','扩大画布','清空画布']</td>
+                            <td>头部工具栏按钮提示文本</td>
+                        </tr>
+                        <tr>
+                            <td>haveTool</td>
+                            <td>true</td>
+                            <td>是否显示左侧工具栏，如果为true，则画布一定可以编辑</td>
+                        </tr>
+                        <tr>
+                            <td>toolBtns</td>
+                            <td><pre><code>[<br />&nbsp;&nbsp;"start",<br />&nbsp;&nbsp;"end",<br />&nbsp;&nbsp;"fork",<br />&nbsp;&nbsp;"join",<br />&nbsp;&nbsp;"complex",<br />&nbsp;&nbsp;"node",<br />&nbsp;&nbsp;"task",<br />&nbsp;&nbsp;"chat",<br />&nbsp;&nbsp;"state",<br />&nbsp;&nbsp;"plug"<br />]</code></pre></td>
+                            <td>左侧工具栏按钮（根据数组出现顺序的不同，还可以进行自定义排序）</td>
+                        </tr>
+                        <tr>
+                            <td>toolBtnRemarks</td>
+                            <td><pre><code>{<br />&nbsp;&nbsp;cursor:"选择指针",<br />&nbsp;&nbsp;direct:"连线",<br />&nbsp;&nbsp;start:"开始结点",<br />&nbsp;&nbsp;end:"结束结点",<br />&nbsp;&nbsp;task:"任务结点",<br />&nbsp;&nbsp;node:"自动结点",<br />&nbsp;&nbsp;chat:"决策结点",<br />&nbsp;&nbsp;state:"状态结点",<br />&nbsp;&nbsp;plug:"附加插件",fork:"分支结点",<br />&nbsp;&nbsp;join:"联合结点",<br />&nbsp;&nbsp;complex:"复合结点",<br />&nbsp;&nbsp;group:"组织划分框编辑开关"<br />}</code></pre></td>
+                            <td>左侧工具栏按钮提示文本</td>
+                        </tr>
+                        <tr>
+                            <td>haveGroup</td>
+                            <td>true</td>
+                            <td>
+                                是否启用组织划分框编辑<br>
+                                如为否, 则左侧工具栏的 group 工具将不出现, <br>
+                                但是已经画了的“组织划分框”还是会出现的。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>useOperStack</td>
+                            <td>true</td>
+                            <td>是否启用回滚栈, 如否, 头部工具栏的回滚和重做按钮都将失效</td>
+                        </tr>
+                        <tr>
+                            <td>editable</td>
+                            <td>true</td>
+                            <td>是否可编辑, 仅在 haveTool=false 时有意义</td>
+                        </tr>
+                        <tr>
+                            <td>onBtnNewClick</td>
+                            <td>null</td>
+                            <td>工具栏回调函数：新建流程图按钮被点中</td>
+                        </tr>
+                        <tr>
+                            <td>onBtnOpenClick</td>
+                            <td>null</td>
+                            <td>工具栏回调函数：打开流程图按钮定义</td>
+                        </tr>
+                        <tr>
+                            <td>onBtnSaveClick</td>
+                            <td>null</td>
+                            <td>工具栏回调函数：保存流程图按钮定义</td>
+                        </tr>
+                        <tr>
+                            <td>onFreshClick</td>
+                            <td>null</td>
+                            <td>工具栏回调函数：重载流程图按钮定义</td>
+                        </tr>
+                        <tr>
+                            <td>onExpandClick</td>
+                            <td>null</td>
+                            <td>工具栏回调函数：扩大画布按钮定义</td>
+                        </tr>
+                        <tr>
+                            <td>onItemAdd</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/线/分组块）被添加时, 触发的方法, <br>
+                                返回FALSE可阻止添加事件的发生<br>
+                                格式: <pre><code>function(id, type, json)</code></pre><br>
+                                id是单元的唯一标识ID,<br>
+                                type是单元的种类,有"node","line","area"三种取值,<br>
+                                json即addNode,addLine或addArea方法的第二个传参json.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemDel</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/线/分组块）被删除时, 触发的方法, <br>
+                                返回FALSE可阻止删除事件的发生<br>
+                                格式: <pre><code>function(id, type)</code></pre><br>
+                                id, type 参数参考 onItemAdd
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemMove</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/分组块）被移动时, 触发的方法, <br>
+                                返回FALSE可阻止移动事件的发生<br>
+                                格式: <pre><code>function(id, type, left, top)</code></pre><br>
+                                id是单元的唯一标识ID,<br>
+                                type是单元的种类,有"node","area"两种取值, 线line不支持移动,<br>
+                                left是新的左边距坐标, <br>top是新的顶边距坐标
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemRename</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/线/分组块）被重命名时, 触发的方法, <br>
+                                返回FALSE可阻止重命名事件的发生<br>
+                                格式: <pre><code>function(id, name, type)</code></pre><br>
+                                id, type 参数参考 onItemAdd<br>
+                                name是新的名称
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemFocus</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/线）被由不选中变成选中时, 触发的方法, <br>
+                                返回FALSE可阻止选中事件的发生<br>
+                                格式: <pre><code>function(id, type)</code></pre><br>
+                                id是单元的唯一标识ID,<br>
+                                type是单元的种类,有"node","line"两种取值,"area"不支持被选中
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemBlur</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/线）被由选中变成不选中时, 触发的方法, <br>
+                                返回FALSE可阻止取消选中事件的发生<br>
+                                格式: <pre><code>function(id, type)</code></pre><br>
+                                id, type 参数参考 onItemBlur
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemResize</td>
+                            <td>null</td>
+                            <td>
+                                当操作某个单元（结点/分组块）被重定义大小或造型时, 触发的方法, <br>
+                                返回FALSE可阻止重定大小/造型事件的发生<br>
+                                格式: <pre><code>function(id, type, width, height)</code></pre><br>
+                                id, type 参数参考 onItemAdd<br>
+                                width是新的宽度,<br>
+                                height是新的高度
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onLineMove</td>
+                            <td>null</td>
+                            <td>
+                                当移动某条折线中段的位置, 触发的方法, <br>
+                                返回FALSE可阻止重定大小/造型事件的发生<br>
+                                格式: <pre><code>function(id, M)</code></pre><br>
+                                id是单元的唯一标识ID,<br>
+                                M是中段的新X(或Y)的坐标
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onLineSetType</td>
+                            <td>null</td>
+                            <td>
+                                当变换某条连接线的类型, 触发的方法, <br>
+                                返回FALSE可阻止重定大小/造型事件的发生<br>
+                                格式: <pre><code>function(id, type)</code></pre><br>
+                                id是单元的唯一标识ID,<br>
+                                type是连接线的新类型:<br>
+                                "sl":直线,<br>
+                                "lr":中段可左右移动的折线,<br>
+                                "tb":中段可上下移动的折线
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onItemMark</td>
+                            <td>null,</td>
+                            <td>
+                                当用重色标注某个结点/转换线时触发的方法, <br>
+                                返回FALSE可阻止重定大小/造型事件的发生<br>
+                                格式: <pre><code>function(id, type, mark)</code></pre><br>
+                                id是单元的唯一标识ID,<br>
+                                type是单元类型（"node"结点,"line"转换线）, <br>
+                                mark为布尔值,表示是要标注TRUE还是取消标注FALSE
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr><th>参数</th><th>默认值</th><th>描述</th></tr>
+                    </tfoot>
+                </table>
+            </div>
+            <h3>4. 方法：</h3>
+            <p>以下方法均采用 GooFlow 对象的调用方式，方便进行二次开发。</p>
+            <div class="table-responsive">
+                <table  class="simpletable tab-success">
+                    <thead>
+                        <tr><th>方法</th><th>示例</th><th>描述</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>createGooFlow</td>
+                            <td><pre><code>var demo = $('selector').createGooFlow(<span class="text-red">options</span>);</code></pre></td>
+                            <td>
+                                所有方法的基础，此方法返回一个 GooFlow 对象<br>
+                                如果需要用到下面的方法，则必须初始化一个用于存储该对象的变量
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setNodeRemarks</td>
+                            <td><pre><code>demo.setNodeRemarks(remark);</code></pre></td>
+                            <td>
+                                设置左侧工具栏的工具提示文本<br>
+                                remark: array 是一个字典对象，具体值参考 参数(toolBtnRemarks)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>switchToolBtn</td>
+                            <td><pre><code>demo.switchToolBtn(btnName);</code></pre></td>
+                            <td>
+                                切换左边工具栏按钮<br>
+                                btnName: string 表示需要切换到的按钮名称，具体值参考 参数(toolBtns)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>addNode</td>
+                            <td><pre><code>demo.switchToolBtn(id, json);</code></pre></td>
+                            <td>
+                                增加一个流程结点<br>
+                                id: string 表示节点的唯一标识ID，建议按照本插件的命名规则来定义<br>
+                                json: dict 该节点所需要的必要参数，包括：name,top,left,width,height,type <br>
+                                <pre><code>demo_node_1: {<br />&nbsp;&nbsp;height: 24<br />&nbsp;&nbsp;left: 101<br />&nbsp;&nbsp;name: "node_1"<br />&nbsp;&nbsp;top: 72<br />&nbsp;&nbsp;type: "start"<br />&nbsp;&nbsp;width: 24<br />}</code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>getItemInfo</td>
+                            <td><pre><code>demo.getItemInfo(id, type);</code></pre></td>
+                            <td>
+                                获取结点/连线/分组区域的详细信息<br>
+                                id: string 表示节点的唯一标识ID<br>
+                                type: string ['node'/'line'/'area'] 需要与该元素类型匹配才能正常获取到信息
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>blurItem</td>
+                            <td><pre><code>demo.blurItem();</code></pre></td>
+                            <td>
+                                取消所有结点/连线被选定的状态
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>focusItem</td>
+                            <td><pre><code>demo.focusItem(id, bool);</code></pre></td>
+                            <td>
+                                选定某个结点/转换线<br>
+                                id: string 表示节点的唯一标识ID<br>
+                                bool: bool true 表示触发选中事件, FALSE 则不触发选中事件
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>moveNode</td>
+                            <td><pre><code>demo.moveNode(id, left, top);</code></pre></td>
+                            <td>
+                                移动结点到一个新的位置/转换线<br>
+                                id: string 表示节点的唯一标识ID<br>
+                                left, top: float 表示左顶点坐标
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setName</td>
+                            <td><pre><code>demo.setName(id, newName, type);</code></pre></td>
+                            <td>
+                                设置结点/连线/分组区域的文字信息<br>
+                                id: string 表示节点的唯一标识ID<br>
+                                newName: string 表示文字信息<br>
+                                type: string ['node'/'line'/'area'] 需要与该元素类型匹配才能修改文字信息
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setNodeType</td>
+                            <td><pre><code>demo.setNodeType(id, type, newType);</code></pre></td>
+                            <td>
+                                修改节点的类型<br>
+                                id: string 表示节点的唯一标识ID<br>
+                                type: string 参考参数(toolBtns) 需要与该元素类型匹配才能修改类型<br>
+                                newType: string 同上 要修改为的类型
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>resizeNode</td>
+                            <td><pre><code>demo.resizeNode(id, width, height);</code></pre></td>
+                            <td>
+                                设置结点的尺寸, 仅支持非开始/结束结点<br>
+                                id: string 表示节点的唯一标识ID<br>
+                                width, height: float 新的尺寸大小
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>delNode</td>
+                            <td><pre><code>demo.delNode(id);</code></pre></td>
+                            <td>
+                                删除结点<br>
+                                id: string 表示节点的唯一标识ID
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setTitle</td>
+                            <td><pre><code>demo.setTitle(text);</code></pre></td>
+                            <td>
+                                设置流程图的名称<br>
+                                text: string 流程图新名称
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>loadData</td>
+                            <td><pre><code>demo.loadData(data);</code></pre></td>
+                            <td>
+                                载入一组数据<br>
+                                data: dict 参考如下内容<br>
+                                <pre><code>{<br />&nbsp;&nbsp;areas: {<br />&nbsp;&nbsp;&nbsp;&nbsp;demo_area_4:{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color: "red"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 145<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left: 56<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: "area_4"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top: 43<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width: 307<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;},<br />&nbsp;&nbsp;lines: {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;demo_line_3: {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from: "demo_node_1"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;marked: false<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: ""<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to: "demo_node_2"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: "sl"<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;},<br />&nbsp;&nbsp;nodes: {<br />&nbsp;&nbsp;&nbsp;&nbsp;demo_node_1: {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 24<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left: 101<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: "node_1"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top: 72<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: "start"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width: 24<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;demo_node_2: {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 24<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left: 285<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: "node_2"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top: 106<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: "end"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width: 24<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;}<br />}</code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>loadDataAjax</td>
+                            <td><pre><code>demo.loadDataAjax(para);</code></pre></td>
+                            <td>
+                                用AJAX方式, 远程读取一组数据<br>
+                                para: jsondict 与JQUERY中$.ajax()方法的传参一样<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>exportData</td>
+                            <td><pre><code>demo.exportData();</code></pre></td>
+                            <td>
+                                把画好的结束导出到一个变量中<br>
+                                其实也可以直接访问 GooFlow 对象的<br>
+                                <code>$nodeData</code>,<code>$lineData</code>,<code>$areaData</code>这三个JSON属性
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>clearData</td>
+                            <td><pre><code>demo.clearData();</code></pre></td>
+                            <td>
+                                清空工作区及已载入的数据
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>destrory</td>
+                            <td><pre><code>demo.destrory();</code></pre></td>
+                            <td>
+                                销毁自己
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>reinitSize</td>
+                            <td><pre><code>demo.reinitSize(width,height);</code></pre></td>
+                            <td>
+                                重构整个流程图设计器的宽高<br>
+                                width, height: float 长宽
+                            </td>
+                        </tr>
+                        <tr class="tr-disable">
+                            <td colspan='3'>以下是与画线相关的方法</td>
+                        </tr>
+                        <tr>
+                            <td>drawLine</td>
+                            <td><pre><code>demo.drawLine(id, startPoint, endPoint, mark, dash);</code></pre></td>
+                            <td>
+                                绘制一条箭头线, 并返回线的DOM<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                startPoint, endPoint: array 二元数组，表示x和y坐标<br>
+                                mark: bool 表示线条是否显示提示文本<br>
+                                dash: bool 是否是虚线
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>drawLine</td>
+                            <td><pre><code>demo.drawLine(id, startPoint, endPoint, mark, dash);</code></pre></td>
+                            <td>
+                                绘制一条箭头线, 并返回线的DOM（注意，这画的是svg图形里面的线）<br>
+                                一般搭配 calcStartEnd 进行使用<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                startPoint, endPoint: array 二元数组，表示x和y坐标<br>
+                                mark: bool 表示线条是否显示提示文本<br>
+                                dash: bool 是否是虚线
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>drawPoly</td>
+                            <td><pre><code>demo.drawPoly(id, startPoint, m1, m2, endPoint, mark);</code></pre></td>
+                            <td>
+                                画一条只有两个中点的折线（注意，这画的是svg图形里面的线）<br>
+                                一般搭配 calcStartEnd 进行使用<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                startPoint, endPoint: array 二元数组，表示x和y坐标<br>
+                                m1, m2: array 二元数组，表示两个中点
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>calcStartEnd</td>
+                            <td><pre><code>demo.calcStartEnd(element1, element2);</code></pre></td>
+                            <td>
+                                计算两个节点的坐标<br>
+                                element1, element2: GooFlowElement 一般搭配 getItemInfo 进行使用：<br>
+                                <pre><code>demo.calcStartEnd(demo.getItemInfo('demo_node_1','node'),demo.getItemInfo('demo_node_2','node'))</code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>calcPolyPoints</td>
+                            <td><pre><code>demo.calcPolyPoints(element1, element2, type, M);</code></pre></td>
+                            <td>
+                                如果两个节点间连接的是折线，则用此方法计算所有需要计算的坐标<br>
+                                element1, element2: GooFlowElement 一般搭配 getItemInfo 进行使用<br>
+                                type: string 'lr'/'tb' 折线类型<br>
+                                M: float 中点的横/纵坐标，根据 type 不同而不同<br>
+                                type='rb'时为X坐标, Type='tb'时为Y坐标
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>getMValue</td>
+                            <td><pre><code>demo.getMValue(element1, element2, type);</code></pre></td>
+                            <td>
+                                初始化折线中点(M)坐标(type='rb'时为X坐标, Type='tb'时为Y坐标)<br>
+                                element1, element2: GooFlowElement 一般搭配 getItemInfo 进行使用<br>
+                                type: string 'lr'/'tb' 折线类型
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>addLine</td>
+                            <td><pre><code>demo.addLine(id, data);</code></pre></td>
+                            <td>
+                                增加一条线<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                data: jsondict 包含 name,type,from,to,marked ，例：<br>
+                                <pre><code>demo1_line_3 = {<br />&nbsp;&nbsp;from: "demo1_node_1"<br />&nbsp;&nbsp;marked: false<br />&nbsp;&nbsp;name: ""<br />&nbsp;&nbsp;to: "demo1_node_2"<br />&nbsp;&nbsp;type: "sl"<br />}</code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>resetLines</td>
+                            <td><pre><code>demo.resetLines(id, node);</code></pre></td>
+                            <td>
+                                重构所有连向某个结点的线的显示<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                node: data 方法 getItemInfo 返回的内容
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setLineType</td>
+                            <td><pre><code>demo.setLineType(id, newType);</code></pre></td>
+                            <td>
+                                新设置连线的样式<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                newType: string 'sl'/'lr'/'tb' 折线类型
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setLineM</td>
+                            <td><pre><code>demo.setLineM(id, M, noStack);</code></pre></td>
+                            <td>
+                                设置折线中段的X坐标值（可左右移动时,tb）或Y坐标值（可上下移动时,lr）<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                M: float 横/纵坐标<br>
+                                noStack: bool 是否不记录历史操作
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>delLine</td>
+                            <td><pre><code>demo.delLine(id);</code></pre></td>
+                            <td>
+                                删除连接线<br>
+                                id: string 表示连接线的唯一标识ID
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>markItem</td>
+                            <td><pre><code>demo.markItem(id, type, mark);</code></pre></td>
+                            <td>
+                                用颜色标注/取消标注一个结点或转换线, 常用于显示重点或流程的进度<br>
+                                这是一个在编辑模式中无用,但是在纯浏览模式中非常有用的方法, <br>
+                                实际运用中可用于跟踪流程的进度。<br>
+                                id: string 表示连接线的唯一标识ID<br>
+                                type: string ['node'/'line'/'area'] 需要与该元素类型匹配才能标注元素<br>
+                                mark: bool 是否显示提示文本
+                            </td>
+                        </tr>
+                        <tr class="tr-disable">
+                            <td colspan='3'>以下是与区域分组块（下称块区）相关的方法</td>
+                        </tr>
+                        <tr>
+                            <td>moveArea</td>
+                            <td><pre><code>demo.moveArea(id, left, top);</code></pre></td>
+                            <td>
+                                移动块区<br>
+                                id: string 表示块区的唯一标识ID<br>
+                                left, top: float 要移动到的坐标
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>delArea</td>
+                            <td><pre><code>demo.delArea(id);</code></pre></td>
+                            <td>
+                                删除块区<br>
+                                id: string 表示块区的唯一标识ID
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>setAreaColor</td>
+                            <td><pre><code>demo.setAreaColor(id, color);</code></pre></td>
+                            <td>
+                                设置块区的颜色<br>
+                                id: string 表示块区的唯一标识ID<br>
+                                color: string ['red'/'yellow'/'blue'/'green']
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>resizeArea</td>
+                            <td><pre><code>demo.resizeArea(id, width, height);</code></pre></td>
+                            <td>
+                                设置块区的尺寸<br>
+                                id: string 表示块区的唯一标识ID<br>
+                                width, height: float 长宽
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>addArea</td>
+                            <td><pre><code>demo.addArea(id, jsondata);</code></pre></td>
+                            <td>
+                                增加块区<br>
+                                id: string 表示块区的唯一标识ID<br>
+                                jsondata: jsondict 包含 name,color,height,width,left,top ，例：<br>
+                                <pre><code>demo1_area_1 = {<br />&nbsp;&nbsp;color: "yellow"<br />&nbsp;&nbsp;height: 100<br />&nbsp;&nbsp;left: 154<br />&nbsp;&nbsp;name: "area_1"<br />&nbsp;&nbsp;top: 105<br />&nbsp;&nbsp;width: 200<br />}</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr><th>方法</th><th>示例</th><th>描述</th></tr>
+                    </tfoot>
+                </table>
+            </div>
+            <br>
+            <h3>5. 二次开发示例：画架构图</h3>
+            <div id="demo2"></div>
+            <div>
+                <button type="button" class="btn" name="ToggleNext">显示/隐藏</button>
+                <pre style="display:none"><code>/**<br />* GooFlow 二次开发<br />* 将 ArcList 数据转化成为 GooFlow 图表<br />* <br />* @param id string GooFlow容器的id<br />* @param JsonList treeviewdict array<br />* @return false<br />*/<br />function setArcDiagram(id, ArcList){<br />&nbsp;&nbsp;&nbsp;&nbsp;var ContenerObj = $('#'+id),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CurrentMaxWidth = 0, CurrentMaxHeight = 0,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata = {};<br />&nbsp;&nbsp;&nbsp;&nbsp;jsondata = ArcListToGooFlowData(id, ArcList, jsondata);<br />&nbsp;&nbsp;&nbsp;&nbsp;if( !jsondata.sizes )<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br />&nbsp;&nbsp;&nbsp;&nbsp;CurrentMaxWidth = jsondata.sizes['MaxWidth'];<br />&nbsp;&nbsp;&nbsp;&nbsp;CurrentMaxHeight = jsondata.sizes['MaxHeigth'];<br />&nbsp;&nbsp;&nbsp;&nbsp;delete(jsondata.sizes);<br />&nbsp;&nbsp;&nbsp;&nbsp;var property={<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: id,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;haveHead: false,      //是否显示头部工具栏<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;haveTool: false,      //是否显示左侧工具栏<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editable: false,<br />&nbsp;&nbsp;&nbsp;&nbsp;};<br />&nbsp;&nbsp;&nbsp;&nbsp;var width = ContenerObj.width();   //获取容器的宽度，用来自适应大小<br />&nbsp;&nbsp;&nbsp;&nbsp;if(CurrentMaxWidth == 0){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.width = width;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.height = '300';<br />&nbsp;&nbsp;&nbsp;&nbsp;}else{    //大概就是说：画布宽度自适应容器大小，画布高度与实际图大小一致，但是如果高度超过500就产生滚动条<br />&nbsp;&nbsp;&nbsp;&nbsp;if(CurrentMaxWidth &gt; width){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.width = width;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.workWidth = CurrentMaxWidth;<br />&nbsp;&nbsp;&nbsp;&nbsp;}else{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.width = CurrentMaxWidth;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;if(CurrentMaxHeight &gt; 500){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.height = 500;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.workHeight = CurrentMaxHeight;<br />&nbsp;&nbsp;&nbsp;&nbsp;}else{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property.height = CurrentMaxHeight;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;};<br />&nbsp;&nbsp;&nbsp;&nbsp;var ArcDiagram = ContenerObj.createGooFlow(property);  // 产生流程图<br />&nbsp;&nbsp;&nbsp;&nbsp;ArcDiagram.loadData(jsondata);    //加载数据<br />&nbsp;&nbsp;&nbsp;&nbsp;return false;<br />};<br />/**<br />* 将 ArcList 数据转化成为 GooFlow 数据<br />* 采用递归深度优先遍历<br />* <br />* @param id string GooFlow容器的id<br />* @param ArcList jsonarray<br />* @param jsondata dict 传入的 GooFlow 数据，用于在里面添加元素后返回<br />* @return jsondata dict 合并后的 GooFlow 数据<br />*/<br />function ArcListToGooFlowData(id, ArcList, jsondata){<br />&nbsp;&nbsp;&nbsp;&nbsp;var MarginLeft = 20, MarginTop = 20,    //定义左侧和顶端的盈余<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;W = 50, H = 100,                    //定义宽度和高度间隔标准量<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UnitWidth = 86, UnitHeight = 24,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RelativeLeft,        //这个是每一个子层级的相对左端点<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AbsoluteLeft;        //这个是每一个子层级的绝对左端点<br />&nbsp;&nbsp;&nbsp;&nbsp;if(!jsondata)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata = {};<br />&nbsp;&nbsp;&nbsp;&nbsp;$.each(ArcList, function(index, ArcInfo) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!jsondata.nodes)    //初始化节点子对象<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.nodes = {};<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!jsondata.lines)    //初始化连接线子对象<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.lines = {};<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!jsondata.sizes)    //初始化大小子对象<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.sizes = {};<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var PathArr = ArcInfo['IDPath'].split('&gt;');    //通过分割，知道上几层的所有节点的左端点<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(PathArr.length&gt;1){    //如果是子级的情况下，进行遍历<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RelativeLeft = MarginLeft;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var i = 0; i &lt; PathArr.length-1; i++) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if( jsondata.nodes[id+'_node_'+PathArr[i]] ) //遍历所有父级元素的左顶端，排除盈余量<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RelativeLeft += jsondata.nodes[id+'_node_'+PathArr[i]].left - MarginLeft;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RelativeLeft = MarginLeft<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}else{    //如果这个是根，直接计算盈余即可<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RelativeLeft = MarginLeft;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AbsoluteLeft = RelativeLeft + (W+UnitWidth)*(index);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(index&gt;0){    //非第一个遍历到的元素的情况下，左端需要进行画布大小偏移<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if( jsondata.sizes['MaxWidth'] && jsondata.sizes['MaxWidth']&gt;AbsoluteLeft )<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AbsoluteLeft = jsondata.sizes['MaxWidth'];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//产生节点数据<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.nodes[id+'_node_'+ArcInfo['ID']] = {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:   ArcInfo['text'],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type:   'task',<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left:   AbsoluteLeft,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top:    MarginTop + H*(PathArr.length-1),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width:  UnitWidth,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: UnitHeight,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(PathArr.length&gt;1 && jsondata.nodes[id+'_node_'+ArcInfo['pid']]){    //如果非根节点需要将上级节点与自己相连，所以需要产生连接线<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var ThisM = (jsondata.nodes[id+'_node_'+ArcInfo['pid']].top + jsondata.nodes[id+'_node_'+ArcInfo['ID']].top)/2;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.lines[id+'_line_'+ArcInfo['ID']] = {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:   '',<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type:   'tb',<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from:   id+'_node_'+ArcInfo['pid'],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to:     id+'_node_'+ArcInfo['ID'],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;marked: false,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M:      ThisM,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var ThisRight = AbsoluteLeft + UnitWidth + W;    //本次增加的这个元素后，得到最右端<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if( !jsondata.sizes['MaxWidth'] || ThisRight&gt;jsondata.sizes['MaxWidth'] ){    //画布最大宽度<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.sizes['MaxWidth'] = ThisRight;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var ThisBottom = MarginTop + H*(PathArr.length-1) + UnitHeight + H;    //本次增加的这个元素后，得到最底端<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if( !jsondata.sizes['MaxHeigth'] || ThisBottom&gt;jsondata.sizes['MaxHeigth'] ){    //画布最大高度<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata.sizes['MaxHeigth'] = ThisBottom;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if( ArcInfo['nodes'] && ArcInfo['nodes'].length&gt;0 ){    //存在子级，则进行遍历（深度优先）<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jsondata = ArcListToGooFlowData(id,ArcInfo['nodes'],jsondata);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;});<br />&nbsp;&nbsp;&nbsp;&nbsp;return jsondata<br />};<br />/**<br />* 格式化 ArcList to treeview格式(含有nodes的层级结构)<br />* 采用递归的方式执行，支持多层结构<br />* <br />* @param data array ArcList<br />* @param pid int 父ID<br />* @return result array treeview格式json数据<br />*/<br />function fromatArcList(data, pid){<br />&nbsp;&nbsp;&nbsp;&nbsp;var result=[], temp;<br />&nbsp;&nbsp;&nbsp;&nbsp;for(var i in data){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(data[i]['pid'] == pid){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result[result.length]=data[i];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp = fromatArcList(data, data[i]['ID'], status);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(temp.length&gt;0)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[i]['nodes']=temp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return result;<br />};<br />ArcList = [<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "顶级部门",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": null,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 1<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "二级部门1",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 1,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;2",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 2<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "三级部门1",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 2,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;2&gt;3",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 3<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "三级部门2",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 2,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;2&gt;4",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 4<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "三级部门3",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 2,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;2&gt;5",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 5<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "三级部门4",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 2,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;2&gt;6",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 6<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "二级部门2",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 1,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;10",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 7<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "三级部门5",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 7,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;7&gt;8",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 8<br />&nbsp;&nbsp;&nbsp;&nbsp;},<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"text": "三级部门6",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pid": 7,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDPath": "1&gt;7&gt;9",<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ID": 9<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />];<br />setArcDiagram('demo2', fromatArcList(ArcList));</code></pre>
+            </div>
+
+        </div>
+        
+        <!-- jQuery -->
+        <script src="dist/jquery.min.js"></script>
+        <script src="dist/GooFlow.min.js"></script>
+        <script>
+        $(function(){
+            var demo1 = $('#demo1').createGooFlow();
+            $('#demo1Export').click(function(event) {
+                console.log(demo1.exportData());
+            });
+            var demo1Data = {
+                areas: {
+                    demo1_area_17: {
+                        color: "yellow",
+                        height: 268,
+                        left: 140,
+                        name: "市场部及项目经理",
+                        top: 31,
+                        width: 129,
+                    },
+                    demo1_area_18: {
+                        color: "blue",
+                        height: 268,
+                        left: 266,
+                        name: "研发部",
+                        top: 29,
+                        width: 138,
+                    },
+                    demo1_area_19: {
+                        color: "green",
+                        height: 268,
+                        left: 403,
+                        name: "测试部",
+                        top: 30,
+                        width: 128,
+                    },
+                    demo1_area_20: {
+                        color: "red",
+                        height: 270,
+                        left: 529,
+                        name: "客户",
+                        top: 29,
+                        width: 142,
+                    },
+                },
+                lines: {
+                    demo1_line_10: {
+                        from: "demo1_node_1",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_3",
+                        type: "sl",
+                    },
+                    demo1_line_11: {
+                        from: "demo1_node_3",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_5",
+                        type: "sl",
+                    },
+                    demo1_line_12: {
+                        from: "demo1_node_5",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_6",
+                        type: "sl",
+                    },
+                    demo1_line_13: {
+                        from: "demo1_node_6",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_7",
+                        type: "sl",
+                    },
+                    demo1_line_14: {
+                        from: "demo1_node_7",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_4",
+                        type: "sl",
+                    },
+                    demo1_line_15: {
+                        M: 409,
+                        from: "demo1_node_4",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_8",
+                        type: "lr",
+                    },
+                    demo1_line_16: {
+                        M: 537.5,
+                        from: "demo1_node_8",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_9",
+                        type: "lr",
+                    },
+                    demo1_line_21: {
+                        from: "demo1_node_9",
+                        marked: false,
+                        name: "",
+                        to: "demo1_node_2",
+                        type: "sl",
+                    },
+                },
+                nodes: {
+                    demo1_node_1: {
+                        height: 24,
+                        left: 80,
+                        name: "开始",
+                        top: 62,
+                        type: "start",
+                        width: 24,
+                    },
+                    demo1_node_2: {
+                        height: 24,
+                        left: 699,
+                        name: "结束",
+                        top: 57,
+                        type: "end",
+                        width: 24,
+                    },
+                    demo1_node_3: {
+                        height: 24,
+                        left: 153,
+                        name: "需求调研",
+                        top: 66,
+                        type: "chat",
+                        width: 86,
+                    },
+                    demo1_node_4: {
+                        height: 24,
+                        left: 298,
+                        name: "开发编程",
+                        top: 254,
+                        type: "complex",
+                        width: 86,
+                    },
+                    demo1_node_5: {
+                        height: 24,
+                        left: 158,
+                        name: "需求分析",
+                        top: 132,
+                        type: "state",
+                        width: 86,
+                    },
+                    demo1_node_6: {
+                        height: 24,
+                        left: 300,
+                        name: "总体设计",
+                        top: 133,
+                        type: "node",
+                        width: 86,
+                    },
+                    demo1_node_7: {
+                        height: 24,
+                        left: 297,
+                        name: "详细设计",
+                        top: 195,
+                        type: "node",
+                        width: 86,
+                    },
+                    demo1_node_8: {
+                        height: 24,
+                        left: 434,
+                        name: "测试",
+                        top: 134,
+                        type: "task",
+                        width: 86,
+                    },
+                    demo1_node_9: {
+                        height: 24,
+                        left: 555,
+                        name: "验收",
+                        top: 59,
+                        type: "plug",
+                        width: 86,
+                    },
+                }
+            };
+            demo1.loadData(demo1Data);
+            
+            // 二次开发范例
+            /**
+            * GooFlow 二次开发
+            * 将 ArcList 数据转化成为 GooFlow 图表
+            * 
+            * @param id string GooFlow容器的id
+            * @param JsonList treeviewdict array
+            * @return false
+            */
+            function setArcDiagram(id, ArcList){
+                var ContenerObj = $('#'+id),
+                    CurrentMaxWidth = 0, CurrentMaxHeight = 0,
+                    jsondata = {};
+                jsondata = ArcListToGooFlowData(id, ArcList, jsondata);
+                if( !jsondata.sizes )
+                    return false;
+                CurrentMaxWidth = jsondata.sizes['MaxWidth'];
+                CurrentMaxHeight = jsondata.sizes['MaxHeigth'];
+                delete(jsondata.sizes);
+                var property={
+                    id: id,
+                    haveHead: false,      //是否显示头部工具栏
+                    haveTool: false,      //是否显示左侧工具栏
+                    editable: false,
+                };
+                var width = ContenerObj.width();   //获取容器的宽度，用来自适应大小
+                if(CurrentMaxWidth == 0){
+                    property.width = width;
+                    property.height = '300';
+                }else{    //大概就是说：画布宽度自适应容器大小，画布高度与实际图大小一致，但是如果高度超过500就产生滚动条
+                if(CurrentMaxWidth > width){
+                    property.width = width;
+                    property.workWidth = CurrentMaxWidth;
+                }else{
+                    property.width = CurrentMaxWidth;
+                }
+                if(CurrentMaxHeight > 500){
+                    property.height = 500;
+                    property.workHeight = CurrentMaxHeight;
+                }else{
+                    property.height = CurrentMaxHeight;
+                }
+                };
+                var ArcDiagram = ContenerObj.createGooFlow(property);  // 产生流程图
+                ArcDiagram.loadData(jsondata);    //加载数据
+                return false;
+            };
+
+            /**
+            * 将 ArcList 数据转化成为 GooFlow 数据
+            * 采用递归深度优先遍历
+            * 
+            * @param id string GooFlow容器的id
+            * @param ArcList jsonarray
+            * @param jsondata dict 传入的 GooFlow 数据，用于在里面添加元素后返回
+            * @return jsondata dict 合并后的 GooFlow 数据
+            */
+            function ArcListToGooFlowData(id, ArcList, jsondata){
+                var MarginLeft = 20, MarginTop = 20,    //定义左侧和顶端的盈余
+                    W = 50, H = 100,                    //定义宽度和高度间隔标准量
+                    UnitWidth = 86, UnitHeight = 24,
+                    RelativeLeft,        //这个是每一个子层级的相对左端点
+                    AbsoluteLeft;        //这个是每一个子层级的绝对左端点
+                if(!jsondata)
+                    jsondata = {};
+                $.each(ArcList, function(index, ArcInfo) {
+                    if(!jsondata.nodes)    //初始化节点子对象
+                        jsondata.nodes = {};
+                    if(!jsondata.lines)    //初始化连接线子对象
+                        jsondata.lines = {};
+                    if(!jsondata.sizes)    //初始化大小子对象
+                        jsondata.sizes = {};
+                    var PathArr = ArcInfo['IDPath'].split('>');    //通过分割，知道上几层的所有节点的左端点
+                    if(PathArr.length>1){    //如果是子级的情况下，进行遍历
+                        RelativeLeft = MarginLeft;
+                        for (var i = 0; i < PathArr.length-1; i++) {
+                            if( jsondata.nodes[id+'_node_'+PathArr[i]] ) //遍历所有父级元素的左顶端，排除盈余量
+                                RelativeLeft += jsondata.nodes[id+'_node_'+PathArr[i]].left - MarginLeft;
+                            else
+                                RelativeLeft = MarginLeft
+                        };
+                    }else{    //如果这个是根，直接计算盈余即可
+                        RelativeLeft = MarginLeft;
+                    }
+                    AbsoluteLeft = RelativeLeft + (W+UnitWidth)*(index);
+                    if(index>0){    //非第一个遍历到的元素的情况下，左端需要进行画布大小偏移
+                        if( jsondata.sizes['MaxWidth'] && jsondata.sizes['MaxWidth']>AbsoluteLeft )
+                            AbsoluteLeft = jsondata.sizes['MaxWidth'];
+                    }
+                    //产生节点数据
+                    jsondata.nodes[id+'_node_'+ArcInfo['ID']] = {
+                        name:   ArcInfo['text'],
+                        type:   'task',
+                        left:   AbsoluteLeft,
+                        top:    MarginTop + H*(PathArr.length-1),
+                        width:  UnitWidth,
+                        height: UnitHeight,
+                    };
+                    if(PathArr.length>1 && jsondata.nodes[id+'_node_'+ArcInfo['pid']]){
+                        //如果非根节点需要将上级节点与自己相连，所以需要产生连接线
+                        var ThisM = (jsondata.nodes[id+'_node_'+ArcInfo['pid']].top + jsondata.nodes[id+'_node_'+ArcInfo['ID']].top)/2;
+                        jsondata.lines[id+'_line_'+ArcInfo['ID']] = {
+                            name:   '',
+                            type:   'tb',
+                            from:   id+'_node_'+ArcInfo['pid'],
+                            to:     id+'_node_'+ArcInfo['ID'],
+                            marked: false,
+                            M:      ThisM,
+                        };
+                    }
+
+                    var ThisRight = AbsoluteLeft + UnitWidth + W;    //本次增加的这个元素后，得到最右端
+                    if( !jsondata.sizes['MaxWidth'] || ThisRight>jsondata.sizes['MaxWidth'] ){    //画布最大宽度
+                        jsondata.sizes['MaxWidth'] = ThisRight;
+                    }
+                    //本次增加的这个元素后，得到最底端
+                    var ThisBottom = MarginTop + H*(PathArr.length-1) + UnitHeight + H;
+                    if( !jsondata.sizes['MaxHeigth'] || ThisBottom>jsondata.sizes['MaxHeigth'] ){    //画布最大高度
+                        jsondata.sizes['MaxHeigth'] = ThisBottom;
+                    }
+
+                    if( ArcInfo['nodes'] && ArcInfo['nodes'].length>0 ){    //存在子级，则进行遍历（深度优先）
+                        jsondata = ArcListToGooFlowData(id,ArcInfo['nodes'],jsondata);
+                    }
+                });
+                return jsondata
+            };
+
+            /**
+            * 格式化 ArcList to treeview格式(含有nodes的层级结构)
+            * 采用递归的方式执行，支持多层结构
+            * 
+            * @param data array ArcList
+            * @param pid int 父ID
+            * @return result array treeview格式json数据
+            */
+            function fromatArcList(data, pid){
+                var result=[], temp;
+                for(var i in data){
+                    if(data[i]['pid'] == pid){
+                        result[result.length]=data[i];
+                        temp = fromatArcList(data, data[i]['ID'], status);
+                        if(temp.length>0)
+                            data[i]['nodes']=temp;
+                    }
+                }
+                return result;
+            };
+
+            ArcList = [
+                {
+                    "text": "顶级部门",
+                    "pid": null,
+                    "IDPath": "1",
+                    "ID": 1
+                },
+                {
+                    "text": "二级部门1",
+                    "pid": 1,
+                    "IDPath": "1>2",
+                    "ID": 2
+                },
+                {
+                    "text": "三级部门1",
+                    "pid": 2,
+                    "IDPath": "1>2>3",
+                    "ID": 3
+                },
+                {
+                    "text": "三级部门2",
+                    "pid": 2,
+                    "IDPath": "1>2>4",
+                    "ID": 4
+                },
+                {
+                    "text": "三级部门3",
+                    "pid": 2,
+                    "IDPath": "1>2>5",
+                    "ID": 5
+                },
+                {
+                    "text": "三级部门4",
+                    "pid": 2,
+                    "IDPath": "1>2>6",
+                    "ID": 6
+                },
+                {
+                    "text": "二级部门2",
+                    "pid": 1,
+                    "IDPath": "1>10",
+                    "ID": 7
+                },
+                {
+                    "text": "三级部门5",
+                    "pid": 7,
+                    "IDPath": "1>7>8",
+                    "ID": 8
+                },
+                {
+                    "text": "三级部门6",
+                    "pid": 7,
+                    "IDPath": "1>7>9",
+                    "ID": 9
+                }
+            ];
+            setArcDiagram('demo2', fromatArcList(ArcList));
+
+            /*此处仅为该demo的辅助脚本，与 GooFlow 无关紧要********start********/
+            $('.row').after('<div class="clr"></div>');
+
+            // bind
+            $('button[name="ToggleNext"]').click(function(event) {
+                var CodeObj = $(this).next();
+                if(CodeObj.is(':hidden')){
+                    CodeObj.slideDown('slow');
+                }else{
+                    CodeObj.slideUp('slow');
+                }
+            });
+            /*此处仅为该demo的辅助脚本，与 GooFlow 无关紧要********end********/
+        });
+
+        </script>
+    </body>
+</html>
